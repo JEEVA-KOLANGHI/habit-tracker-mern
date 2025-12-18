@@ -4,17 +4,22 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
-app.use(cors());
+
+// ✅ CORRECT CORS FOR YOUR VERCEL + RENDER
+app.use(cors({
+    origin: 'https://habit-tracker-mern.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
 app.use(express.json());
 
 connectDB();
 
 app.get('/', (req, res) => res.send('API running'));
 
-// Only authentication routes for now
 app.use('/api/auth', require('./routes/auth'));
-
-// Do NOT include tasks/habits until you create those files
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/habits', require('./routes/habits'));
 
